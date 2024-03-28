@@ -1,123 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Image Cropper</title>
     <!-- Include the Cropper CSS file -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css" rel="stylesheet" />
     <!-- Link to your custom CSS file -->
-    <link href="/static/style.css" rel="stylesheet"/>
+    <link href="/static/style.css" rel="stylesheet" />
 </head>
+
 <body>
 
-<div class="container">
-    <input type="file" id="imageInput">
     <div class="container">
-        <img id="image">
+        <input type="file" id="imageInput">
+        <img id="image" style="display:none;"> <!-- Initially hide the image -->
     </div>
-</div>
 
-<div class="buttons">
-    <button id="aspectRatioFree">Free</button>
-    <button id="aspectRatioOriginal">Original</button>
-    <button id="aspectRatio1_1">1:1</button>
-    <button id="aspectRatio4_5">4:5</button>
-    <button id="aspectRatio9_16">9:16</button>
-    <button id="cropButton">Crop</button>
-</div>
+    <div class="buttons">
+        <button id="aspectRatioFree">Free</button>
+        <button id="aspectRatioOriginal">Original</button>
+        <button id="aspectRatio1_1">1:1</button>
+        <button id="aspectRatio4_5">4:5</button>
+        <button id="aspectRatio9_16">9:16</button>
+        <button id="cropButton">Crop</button>
+    </div>
 
-<!-- Include the Cropper JS file -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js"></script>
-<script>
-    let cropper;
-    const imageElement = document.getElementById('image');
-    const inputElement = document.getElementById('imageInput');
+    <!-- Include the Cropper JS file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js"></script>
+    <script>
+        let cropper;
+        const imageElement = document.getElementById('image');
+        const inputElement = document.getElementById('imageInput');
 
-// ... previous JavaScript code ...
+        // ... previous JavaScript code ...
 
-inputElement.addEventListener('change', function (event) {
-    const files = event.target.files;
-    if (files && files.length) {
-        const file = files[0];
-        // Use the server to remove the background
-        const formData = new FormData();
-        formData.append('file', file);
-
-        fetch('/remove-bg', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.blob())
-        .then(blob => {
-            imageElement.src = URL.createObjectURL(blob);
-            imageElement.onload = function() {
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(imageElement, {
-                    aspectRatio: NaN,
-                    viewMode: 2, // Limit the crop box to not exceed the size of the canvas
-                    autoCropArea: 0.8, // Define the default crop box size as 80% of the canvas size
-                    // ... other options ...
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-});
-
-// ... rest of your JavaScript ...
-
-
-    document.getElementById('aspectRatioFree').addEventListener('click', function() {
-        cropper.setAspectRatio(NaN); // Free aspect ratio
-    });
-    document.getElementById('aspectRatioOriginal').addEventListener('click', function() {
-        const originalAspectRatio = imageElement.naturalWidth / imageElement.naturalHeight;
-        cropper.setAspectRatio(originalAspectRatio); // Original aspect ratio
-    });
-    document.getElementById('aspectRatio1_1').addEventListener('click', function() {
-        cropper.setAspectRatio(1 / 1); // 4:5 aspect ratio
-    });
-    document.getElementById('aspectRatio4_5').addEventListener('click', function() {
-        cropper.setAspectRatio(4 / 5); // 4:5 aspect ratio
-    });
-    document.getElementById('aspectRatio9_16').addEventListener('click', function() {
-        cropper.setAspectRatio(9 / 16); // 9:16 aspect ratio
-    });
-
-    document.getElementById('cropButton').addEventListener('click', function() {
-        if (cropper) {
-            // Get the cropped image data
-            cropper.getCroppedCanvas().toBlob(function (blob) {
-                // Send the cropped image back to the server for any further processing or to download
+        inputElement.addEventListener('change', function (event) {
+            const files = event.target.files;
+            if (files && files.length) {
+                const file = files[0];
+                // Use the server to remove the background
                 const formData = new FormData();
-                formData.append('croppedImage', blob);
-                fetch('/upload-cropped', {
+                formData.append('file', file);
+
+                fetch('/remove-bg', {
                     method: 'POST',
                     body: formData,
                 })
-                .then(response => response.blob())
-                .then(blob => {
-                    // Create a local URL for the processed image and download it
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'cropped.png';
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                    .then(response => response.blob())
+                    .then(blob => {
+                        imageElement.src = URL.createObjectURL(blob);
+                        imageElement.onload = function () {
+                            if (cropper) {
+                                cropper.destroy();
+                            }
+                            cropper = new Cropper(imageElement, {
+                                aspectRatio: NaN,
+                                viewMode: 2, // Limit the crop box to not exceed the size of the canvas
+                                autoCropArea: 0.8, // Define the default crop box size as 80% of the canvas size
+                                // ... other options ...
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+
+        // ... rest of your JavaScript ...
+
+
+        document.getElementById('aspectRatioFree').addEventListener('click', function () {
+            cropper.setAspectRatio(NaN); // Free aspect ratio
+        });
+        document.getElementById('aspectRatioOriginal').addEventListener('click', function () {
+            const originalAspectRatio = imageElement.naturalWidth / imageElement.naturalHeight;
+            cropper.setAspectRatio(originalAspectRatio); // Original aspect ratio
+        });
+        document.getElementById('aspectRatio1_1').addEventListener('click', function () {
+            cropper.setAspectRatio(1 / 1); // 4:5 aspect ratio
+        });
+        document.getElementById('aspectRatio4_5').addEventListener('click', function () {
+            cropper.setAspectRatio(4 / 5); // 4:5 aspect ratio
+        });
+        document.getElementById('aspectRatio9_16').addEventListener('click', function () {
+            cropper.setAspectRatio(9 / 16); // 9:16 aspect ratio
+        });
+
+        document.getElementById('cropButton').addEventListener('click', function () {
+            if (cropper) {
+                // Get the cropped image data
+                cropper.getCroppedCanvas().toBlob(function (blob) {
+                    // Send the cropped image back to the server for any further processing or to download
+                    const formData = new FormData();
+                    formData.append('croppedImage', blob);
+                    fetch('/upload-cropped', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => response.blob())
+                        .then(blob => {
+                            // Create a local URL for the processed image and download it
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'cropped.png';
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
                 });
-            });
-        }
-    });
-</script>
+            }
+        });
+    </script>
 
 </body>
+
 </html>
