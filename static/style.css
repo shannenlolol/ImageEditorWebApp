@@ -1,13 +1,13 @@
 #image {
     max-width: 100%; /* Maximum width of image is 100% of its container */
-    max-height: 20vh; /* Maximum height of image is 80% of the viewport height */
+    max-height: 80vh; /* Maximum height of image is 80% of the viewport height */
     display: block; /* Center the image */
     margin: 10px auto; /* Add some margin around the image */
 }
 
 .container {
     text-align: center;
-    max-height: 20vh;
+    max-height: 80vh;
 }
 
 .buttons {
