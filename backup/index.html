@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Editor with Fabric.js and Cropper.js</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+</head>
+<body>
+    <input type="file" id="uploadImage" accept="image/*">
+    <div id="canvasContainer">
+        <canvas id="fabricCanvas"></canvas>
+    </div>
+    <button id="editDone">Done Editing</button>
+    <script src="app.js"></script>
+</body>
+</html>
