@@ -494,8 +494,8 @@
                     const finalWidth = width;
                     const finalHeight = height;
 
-                    // Create temporary canvas for the edited image
-                    const tempCanvas = cropper.getEditedCanvas({
+                    // Create temporary canvas for the cropped image
+                    const tempCanvas = cropper.getCroppedCanvas({
                         width: scaledWidth,
                         height: scaledHeight,
                         fillColor: cropper.options.fillColor
@@ -518,7 +518,7 @@
                     const y = (finalHeight - scaledHeight) / 2;
                     ctx.drawImage(tempCanvas, x, y, scaledWidth, scaledHeight);
                 } else {
-                    canvas = cropper.getEditedCanvas({
+                    canvas = cropper.getCroppedCanvas({
                         fillColor: cropper.options.fillColor
                     });
                 }
