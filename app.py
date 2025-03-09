@@ -24,21 +24,19 @@ def remove_bg():
         img_byte_arr.seek(0)
         return send_file(img_byte_arr, mimetype='image/png')
 
-@app.route('/upload-cropped', methods=['POST'])
-def upload_cropped():
-    if 'croppedImage' not in request.files:
+@app.route('/upload-edited', methods=['POST'])
+def upload_edited():
+    if 'editedImage' not in request.files:
         return jsonify({'message': 'No file part'}), 400
-    file = request.files['croppedImage']
+    file = request.files['editedImage']
     if file.filename == '':
         return jsonify({'message': 'No selected file'}), 400
     if file:
-        # Here you might save the file or further process it;
-        # For now, we'll just send it back as a response.
         return send_file(
             BytesIO(file.read()),
             mimetype='image/png',
-            as_attachment=True,
-            attachment_filename='cropped.png'
+            download_name='edited.png',
+            as_attachment=True
         )
 
 if __name__ == '__main__':
